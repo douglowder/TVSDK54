@@ -1,12 +1,12 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform, Pressable } from 'react-native';
-import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useTextStyles } from '@/hooks/useTextStyles';
 import { useScale } from '@/hooks/useScale';
+import { useTextStyles } from '@/hooks/useTextStyles';
+import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
+import { Tabs } from 'expo-router';
+import React from 'react';
+import { Platform, Pressable } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -80,6 +80,20 @@ export default function TabLayout() {
           tabBarLabelStyle: textStyles.default,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'tv' : 'tv-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="video"
+        options={{
+          title: 'Video demo',
+          tabBarButton,
+          tabBarLabelStyle: textStyles.default,
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? 'videocam' : 'videocam-outline'}
+              color={color}
+            />
           ),
         }}
       />
