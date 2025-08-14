@@ -19,7 +19,7 @@ export default function VideoDemoScreen() {
     },
     titleContainer: {
       flexDirection: 'row',
-      gap: 8 * scale,
+      gap: 4 * scale,
     },
   });
   return (
@@ -34,9 +34,12 @@ export default function VideoDemoScreen() {
       }
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Video demo</ThemedText>
+        <ThemedText type="subtitle">Audio demo</ThemedText>
       </ThemedView>
       <AudioTest />
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="subtitle">Video demo</ThemedText>
+      </ThemedView>
       <VideoTest />
     </ParallaxScrollView>
   );

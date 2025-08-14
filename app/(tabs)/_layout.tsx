@@ -86,7 +86,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="video"
         options={{
-          title: 'Video demo',
+          title: 'Video and audio demos',
           tabBarButton,
           tabBarLabelStyle: textStyles.default,
           tabBarIcon: ({ color, focused }) => (
