@@ -1,0 +1,47 @@
+diff --git a/node_modules/expo-audio/build/ExpoAudio.js b/node_modules/expo-audio/build/ExpoAudio.js
+index 9228c63..a68b2a1 100644
+--- a/node_modules/expo-audio/build/ExpoAudio.js
++++ b/node_modules/expo-audio/build/ExpoAudio.js
+@@ -20,15 +20,18 @@ AudioModule.AudioPlayer.prototype.setPlaybackRate = function (rate, pitchCorrect
+         return setPlaybackRate.call(this, rate, pitchCorrectionQuality);
+     }
+ };
+-const prepareToRecordAsync = AudioModule.AudioRecorder.prototype.prepareToRecordAsync;
+-AudioModule.AudioRecorder.prototype.prepareToRecordAsync = function (options) {
+-    const processedOptions = options ? createRecordingOptions(options) : undefined;
+-    return prepareToRecordAsync.call(this, processedOptions);
+-};
+-const record = AudioModule.AudioRecorder.prototype.record;
+-AudioModule.AudioRecorder.prototype.record = function (options) {
+-    return record.call(this, options);
+-};
++// Audio recording prototypes should not be shimmed on tvOS, where they do not exist
++if (!Platform.isTV || Platform.OS !== 'ios') {
++    const prepareToRecordAsync = AudioModule.AudioRecorder.prototype.prepareToRecordAsync;
++    AudioModule.AudioRecorder.prototype.prepareToRecordAsync = function (options) {
++        const processedOptions = options ? createRecordingOptions(options) : undefined;
++        return prepareToRecordAsync.call(this, processedOptions);
++    };
++    const record = AudioModule.AudioRecorder.prototype.record;
++    AudioModule.AudioRecorder.prototype.record = function (options) {
++        return record.call(this, options);
++    };
++}
+ /**
+  * Creates an `AudioPlayer` instance that automatically releases when the component unmounts.
+  *
+diff --git a/node_modules/expo-audio/ios/AudioModule.swift b/node_modules/expo-audio/ios/AudioModule.swift
+index 2a865b8..44a2a2c 100644
+--- a/node_modules/expo-audio/ios/AudioModule.swift
++++ b/node_modules/expo-audio/ios/AudioModule.swift
+@@ -21,9 +21,9 @@ public class AudioModule: Module {
+       self.appContext?.permissions?.register([
+         AudioRecordingRequester()
+       ])
++      #endif
+ 
+       setupInterruptionHandling()
+-      #endif
+     }
+ 
+     AsyncFunction("setAudioModeAsync") { (mode: AudioMode) in
