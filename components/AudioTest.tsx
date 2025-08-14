@@ -1,6 +1,11 @@
 import { useScale } from '@/hooks/useScale';
-import { AudioPlayerOptions, AudioSource, useAudioPlayer } from 'expo-audio';
-import { useState } from 'react';
+import {
+  AudioPlayerOptions,
+  AudioSource,
+  AudioStatus,
+  useAudioPlayer,
+  useAudioPlayerStatus,
+} from 'expo-audio';
 import { Platform, StyleSheet, View } from 'react-native';
 import { DemoButton } from './DemoButton';
 import { fractionCompleteFromPosition, ProgressBar } from './ProgressBar';
@@ -14,15 +19,12 @@ const options: AudioPlayerOptions = {
 export default function App() {
   const styles = useAudioStyles();
   const player = useAudioPlayer(source, options);
-  const [fractionComplete, setFractionComplete] = useState(0);
-  player.addListener('playbackStatusUpdate', (status) => {
-    const fraction = fractionCompleteFromPosition(
-      status.currentTime,
-      status.duration,
-    );
-    setFractionComplete(fraction);
-    // console.log(`Fraction played: ${fraction}`);
-  });
+  const status: AudioStatus = useAudioPlayerStatus(player);
+  const fractionComplete = fractionCompleteFromPosition(
+    status.currentTime,
+    status.duration,
+  );
+  const isPlaying = status.playing;
 
   return (
     <View style={styles.container}>
@@ -32,8 +34,10 @@ export default function App() {
         </View>
       </View>
       <View style={styles.buttons}>
-        <DemoButton title="Play Sound" onPress={() => player.play()} />
-        <DemoButton title="Pause Sound" onPress={() => player.pause()} />
+        <DemoButton
+          title={isPlaying ? 'Pause Sound' : 'Play Sound'}
+          onPress={() => (isPlaying ? player.pause() : player.play())}
+        />
         <DemoButton
           title="Replay Sound"
           onPress={() => {
