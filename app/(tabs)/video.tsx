@@ -1,6 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 
+import AudioTest from '@/components/AudioTest';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -35,6 +36,7 @@ export default function VideoDemoScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Video demo</ThemedText>
       </ThemedView>
+      <AudioTest />
       <VideoTest />
     </ParallaxScrollView>
   );

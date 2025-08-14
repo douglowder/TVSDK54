@@ -2,8 +2,9 @@ import { useInterval } from '@/hooks/useInterval';
 import { useScale } from '@/hooks/useScale';
 import { useVideoPlayer, VideoPlayerStatus, VideoView } from 'expo-video';
 import { useEffect, useRef, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-
+import { Platform, StyleSheet, View } from 'react-native';
+import { DemoButton } from './DemoButton';
+import { fractionCompleteFromPosition, ProgressBar } from './ProgressBar';
 const videoSource =
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
@@ -13,13 +14,6 @@ export default function VideoTest() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [videoStatus, setVideoStatus] = useState<VideoPlayerStatus>('idle');
   const [fractionComplete, setFractionComplete] = useState(0);
-
-  const fractionCompleteFromPosition = (
-    position: number | undefined,
-    duration: number | undefined,
-  ) => {
-    return duration !== undefined ? (position ?? 0) / duration : 0;
-  };
 
   const player = useVideoPlayer(videoSource, (player) => {
     player.addListener('statusChange', (payload) => {
@@ -70,7 +64,7 @@ export default function VideoTest() {
         <ProgressBar fractionComplete={fractionComplete} />
       </View>
       <View style={styles.buttons}>
-        <Button
+        <DemoButton
           title="Rewind"
           onPress={() => {
             player.currentTime = 0;
@@ -79,7 +73,7 @@ export default function VideoTest() {
             );
           }}
         />
-        <Button
+        <DemoButton
           title="Back 5 sec"
           onPress={() => {
             player.seekBy(-5);
@@ -88,7 +82,7 @@ export default function VideoTest() {
             );
           }}
         />
-        <Button
+        <DemoButton
           title={isPlaying ? 'Pause' : 'Play'}
           onPress={() => {
             if (player.playing) {
@@ -98,7 +92,7 @@ export default function VideoTest() {
             }
           }}
         />
-        <Button
+        <DemoButton
           title="Forward 5 sec"
           onPress={() => {
             player.seekBy(5);
@@ -107,7 +101,7 @@ export default function VideoTest() {
             );
           }}
         />
-        <Button
+        <DemoButton
           title="Full screen"
           onPress={() => {
             ref.current.enterFullscreen();
@@ -118,40 +112,7 @@ export default function VideoTest() {
   );
 }
 
-const ProgressBar = (props: any) => {
-  const styles = useVideoStyles();
-  const progressBarStyles = {
-    container: styles.progressContainer,
-    left: [styles.progressLeft, { flex: props?.fractionComplete || 0.0 }],
-    right: [
-      styles.progressRight,
-      { flex: 1.0 - props?.fractionComplete || 1.0 },
-    ],
-  };
-  return (
-    <View style={progressBarStyles.container}>
-      <View style={progressBarStyles.left} />
-      <View style={progressBarStyles.right} />
-    </View>
-  );
-};
-
-const Button = (props: { title: string; onPress: () => void }) => {
-  const styles = useVideoStyles();
-  return (
-    <Pressable
-      onPress={() => props.onPress()}
-      style={({ pressed, focused }) => [
-        styles.button,
-        pressed || focused ? { backgroundColor: 'blue' } : {},
-      ]}
-    >
-      <Text style={styles.buttonText}>{props.title}</Text>
-    </Pressable>
-  );
-};
-
-const useVideoStyles = () => {
+export const useVideoStyles = () => {
   const scale = useScale();
   const vidHeight = 200 * scale;
   const vidWidth = 2 * vidHeight;
@@ -172,33 +133,6 @@ const useVideoStyles = () => {
     buttons: {
       justifyContent: 'center',
       alignItems: Platform.isTV ? 'flex-start' : 'center',
-    },
-    button: {
-      backgroundColor: 'darkblue',
-      margin: 5 * scale,
-      borderRadius: 2 * scale,
-      padding: 5 * scale,
-    },
-    buttonText: {
-      color: 'white',
-      fontSize: 8 * scale,
-    },
-    progressContainer: {
-      flexDirection: 'row',
-      width: vidWidth,
-      height: 5 * scale,
-      margin: 0,
-    },
-    progressLeft: {
-      backgroundColor: 'blue',
-      borderTopRightRadius: 5 * scale,
-      borderBottomRightRadius: 5 * scale,
-      flexDirection: 'row',
-      height: '100%',
-    },
-    progressRight: {
-      flexDirection: 'row',
-      height: '100%',
     },
   });
 };

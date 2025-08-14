@@ -13,7 +13,7 @@ export default function TabLayout() {
   const textStyles = useTextStyles();
   const scale = useScale();
 
-  const tabBarButton = (props: BottomTabBarButtonProps) => {
+  const tabBarButton = (props: Omit<BottomTabBarButtonProps, 'ref'>) => {
     const style: any = props.style ?? {};
     return (
       <Pressable
